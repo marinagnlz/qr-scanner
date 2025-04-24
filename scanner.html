@@ -1,46 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Escáner QR</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
-</head>
-<body>
-<h3>Escanea un código QR</h3>
-<div id="reader" style="width: 400px;"></div>
-<script>
-    const html5QrCode = new Html5Qrcode("reader");
-
-    html5QrCode.start(
-      { facingMode: "environment" }, // cámara trasera
-      {
-        fps: 10,
-        qrbox: 250
-      },
-      (decodedText, decodedResult) => {
-        // Enviar solo el texto (no el objeto)
-        console.log("Enviando código QR:", decodedText); // Verifica que se está obteniendo el texto
-        window.parent.postMessage({ text: decodedText }, "*");
-
-        // Detener el escaneo y cerrar la ventana
-        html5QrCode.stop().then(() => {
-          // Asegúrate de que la ventana se cierra correctamente
-          if (window.opener) {
-            window.close(); // Cerrar la ventana solo si fue abierta por el script
-          }
-        }).catch(err => {
-          console.error("Error al detener el escáner", err);
-          if (window.opener) {
-            window.close(); // Cerrar la ventana solo si fue abierta por el script
-          }
-        });
-      },
-      (errorMessage) => {
-        // Puedes loguear si quieres los errores mientras escanea
-        console.warn("Escaneo fallido:", errorMessage);
-      }
-    ).catch(err => {
-      console.error("No se pudo iniciar el escáner:", err);
+const html5QrCode = new Html5Qrcode("reader");
+html5QrCode.start(
+  { facingMode: "environment" }, // cámara trasera
+  {
+    fps: 10,
+    qrbox: 250
+  },
+  (decodedText, decodedResult) => {
+    // Enviar solo el texto (no el objeto)
+    console.log("Enviando código QR:", decodedText); // Asegúrate de que el código QR es el texto y no otro tipo de objeto
+    window.parent.postMessage({ text: decodedText }, "*"); // Enviamos solo el texto
+    // Detener el escaneo y cerrar la ventana
+    html5QrCode.stop().then(() => {
+      window.close();
+    }).catch(err => {
+      console.error("Error al detener el escáner", err);
+      window.close();
     });
-</script>
-</body>
-</html>
+  },
+  (errorMessage) => {
+    // Puedes loguear si quieres los errores mientras escanea
+    // console.warn("Escaneo fallido:", errorMessage);
+  }
+).catch(err => {
+  console.error("No se pudo iniciar el escáner:", err);
+});
+debugger;
