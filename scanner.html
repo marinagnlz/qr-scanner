@@ -8,6 +8,7 @@ html5QrCode.start(
   (decodedText, decodedResult) => {
     // Enviar solo el texto (no el objeto)
     console.log("Enviando código:", decodedText); 
+debugger;
     window.parent.postMessage({ text: decodedText }, "*"); // Enviamos solo el texto
     // Detener el escaneo y cerrar la ventana
     html5QrCode.stop().then(() => {
