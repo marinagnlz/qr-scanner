@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Escáner de Código QR</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+<h3>Escanea un código QR</h3>
+<div id="reader" style="width:400px;"></div>
+<script>
+   function onScanSuccess(decodedText, decodedResult) {
+     // Enviar el resultado a SAP Personas
+     window.parent.postMessage(decodedText, "*");
+   }
+   const scanner = new Html5QrcodeScanner(
+     "reader", { fps: 10, qrbox: 250 });
+   scanner.render(onScanSuccess);
+</script>
+</body>
+</html>
