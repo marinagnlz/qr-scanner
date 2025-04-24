@@ -17,7 +17,7 @@
       },
       (decodedText, decodedResult) => {
         // Enviar solo el texto (no el objeto)
-        window.parent.postMessage(decodedText, "*");
+        window.parent.postMessage({ text: decodedText }, "*");
         // Detener el escaneo y cerrar la ventana
         html5QrCode.stop().then(() => {
           window.close();
