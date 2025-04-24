@@ -1,20 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Escáner de Código QR</title>
+<title>Escáner QR</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
 <h3>Escanea un código QR</h3>
-<div id="reader" style="width:400px;"></div>
+<div id="reader" style="width: 400px;"></div>
 <script>
-   function onScanSuccess(decodedText, decodedResult) {
-     // Enviar el resultado a SAP Personas
-     window.parent.postMessage(decodedText, "*");
-   }
-   const scanner = new Html5QrcodeScanner(
-     "reader", { fps: 10, qrbox: 250 });
-   scanner.render(onScanSuccess);
+   const html5QrCode = new Html5Qrcode("reader");
+   html5QrCode.start(
+     { facingMode: "environment" },
+     {
+       fps: 10,
+       qrbox: 250
+     },
+     (decodedText, decodedResult) => {
+       // Envía el valor a la ventana principal (SAP Personas)
+       window.parent.postMessage(decodedText, "*");
+       // Detiene el escaneo
+       html5QrCode.stop().then(() => {
+         // Cierra la ventana del escáner
+         window.close();
+       }).catch(err => {
+         console.error("Error al detener escáner", err);
+         window.close();
+       });
+     },
+     (errorMessage) => {
+       // Puedes loguear errores si lo necesitas
+       // console.log("No se detectó QR:", errorMessage);
+     }
+   ).catch(err => {
+     console.error("Error al iniciar escáner", err);
+   });
 </script>
 </body>
 </html>
